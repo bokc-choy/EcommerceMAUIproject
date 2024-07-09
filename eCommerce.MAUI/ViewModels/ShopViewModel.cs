@@ -32,16 +32,53 @@ namespace eCommerce.MAUI.ViewModels
         {
             get
             {
-                return InventoryServiceProxy.Current.Products.Where(p => p != null)
+                return InventoryServiceProxy.Current.Products.Where(p => p != null && p.Quantity > 0)
                     .Where(p => p?.Name?.ToUpper()?.Contains(InventoryQuery.ToUpper()) ?? false)
                     .Select(p => new ProductViewModel(p)).ToList()
                     ?? new List<ProductViewModel>();
             }
         }
 
-        public ProductViewModel? ProductToBuy { get; set; }
+        public List<ProductViewModel> ProductInCart
+        {
+            get
+            {
+                return ShoppingCartServiceProxy.Current?.Cart?.Contents?.Where(p => p != null && p.Quantity > 0)
+                    .Where(p => p?.Name?.ToUpper()?.Contains(InventoryQuery.ToUpper()) ?? false)
+                    .Select(p => new ProductViewModel(p)).ToList()
+                    ?? new List<ProductViewModel>();
+            }
+        }
 
-        public ShoppingCart Cart { get; set; }
+        private ProductViewModel? productToBuy;
+        public ProductViewModel? ProductToBuy
+        {
+            get => productToBuy;
+
+            set
+            {
+                productToBuy = value;
+
+                if (productToBuy != null && productToBuy.Model == null)
+                {
+                    productToBuy.Model = new Product();
+                }
+                else if(productToBuy != null && productToBuy.Model != null)
+                {
+                    productToBuy.Model = new Product(productToBuy.Model);
+                }
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ShoppingCart Cart {
+            get
+            {
+                return ShoppingCartServiceProxy.Current.Cart;
+            }
+        }
+
 
         public void Refresh()
         {
@@ -60,7 +97,14 @@ namespace eCommerce.MAUI.ViewModels
             {
                 return;
             }
-            ShoppingCartService.Current.AddToCart(ProductToBuy.Model);
+            //ProductToBuy.Model = new Product(ProductToBuy.Model);
+            ProductToBuy.Model.Quantity = 1;
+            ShoppingCartServiceProxy.Current.AddToCart(ProductToBuy.Model);
+
+            //productToBuy = null;
+            ProductToBuy = null;
+            NotifyPropertyChanged(nameof(ProductInCart));
+            NotifyPropertyChanged(nameof(Products));
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

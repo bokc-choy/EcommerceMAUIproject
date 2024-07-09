@@ -72,9 +72,9 @@
                 Grid.Column="1"
                 >
                 <ListView
-                    ItemsSource="{Binding Cart.Contents}"
+                    ItemsSource="{Binding ProductInCart}"
                     SelectedItem="{Binding SelectedProduct}"
-    >
+                    >
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>

@@ -10,5 +10,10 @@ namespace Amazon.Library.Models
     {
         int Id { get; set; }
         public List<Product>? Contents { get; set; }
+
+        public ShoppingCart()
+        {
+            Contents = new List<Product>();
+        }
     }
 }
