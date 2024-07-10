@@ -15,5 +15,6 @@ namespace Amazon.Library.Models
         {
             Contents = new List<Product>();
         }
+
     }
 }

@@ -46,9 +46,17 @@ namespace eCommerce.MAUI.ViewModels
             }
         }
 
-        public ProductViewModel()
+        public ProductViewModel(int productId = 0)
         {
-            Model = new Product();
+            if(productId == 0)
+            {
+                Model = new Product();
+            }
+            else
+            {
+                Model = InventoryServiceProxy.Current
+                    .Products.FirstOrDefault(p => p.Id == productId) ?? new Product();
+            }
         }
 
         public ProductViewModel(Product? model)

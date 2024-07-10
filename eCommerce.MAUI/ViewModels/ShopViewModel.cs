@@ -50,6 +50,7 @@ namespace eCommerce.MAUI.ViewModels
             }
         }
 
+
         private ProductViewModel? productToBuy;
         public ProductViewModel? ProductToBuy
         {
@@ -72,6 +73,32 @@ namespace eCommerce.MAUI.ViewModels
             }
         }
 
+        // NEW STUFF //
+
+        private ProductViewModel? selectedProduct;
+
+        public ProductViewModel? SelectedProduct
+        {
+            get => selectedProduct;
+
+            set
+            {
+                selectedProduct = value;
+
+                if (selectedProduct != null && selectedProduct.Model == null)
+                {
+                    selectedProduct.Model = new Product();
+                }
+                else if (selectedProduct != null && selectedProduct.Model != null)
+                {
+                    selectedProduct.Model = new Product(selectedProduct.Model);
+                }
+
+                NotifyPropertyChanged();
+            }
+        }
+
+        // //
         public ShoppingCart Cart {
             get
             {
@@ -79,11 +106,11 @@ namespace eCommerce.MAUI.ViewModels
             }
         }
 
-
         public void Refresh()
         {
             InventoryQuery = string.Empty;
             NotifyPropertyChanged(nameof(Products));
+            NotifyPropertyChanged(nameof(TotalPrice));
         }
 
         public void Search()
@@ -105,7 +132,31 @@ namespace eCommerce.MAUI.ViewModels
             ProductToBuy = null;
             NotifyPropertyChanged(nameof(ProductInCart));
             NotifyPropertyChanged(nameof(Products));
+
+            NotifyPropertyChanged(nameof(TotalPrice));
         }
+
+        // Remove //
+        public void RemoveFromCart()
+        {
+            if (SelectedProduct == null)
+            {
+                return;
+            }
+            //SelectedProduct.Model.Quantity = 1;
+            ShoppingCartServiceProxy.Current.RemoveFromCart(SelectedProduct.Model);
+
+            SelectedProduct = null;
+            NotifyPropertyChanged(nameof(ProductInCart));
+            NotifyPropertyChanged(nameof(Products));
+
+            NotifyPropertyChanged(nameof(TotalPrice));
+        }
+        //////
+
+        public decimal TotalPrice => ShoppingCartServiceProxy.Current.GetTotalPrice();
+
+        //////
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

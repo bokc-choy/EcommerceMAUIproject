@@ -37,6 +37,7 @@ namespace Amazon.Library.Services
             }
         }
 
+
         private ShoppingCartServiceProxy() { 
             carts = new List<ShoppingCart>();
         }
@@ -56,11 +57,6 @@ namespace Amazon.Library.Services
             }
         }
 
-        //public ShoppingCart AddOrUpdate(ShoppingCart c)
-        //{
-        //    //TODO: Someone do this.
-        //}
-
         public void AddToCart(Product newProduct)
         {
             if(Cart == null || Cart.Contents == null)
@@ -79,6 +75,7 @@ namespace Amazon.Library.Services
             
             inventoryProduct.Quantity -= newProduct.Quantity;
 
+
             if(existingProduct != null)
             {
                 // update
@@ -89,6 +86,38 @@ namespace Amazon.Library.Services
                 Cart?.Contents?.Add(newProduct);
             }
         }
+
+        // Remove //
+        public void RemoveFromCart(Product newProduct)
+        {
+            if (Cart == null || Cart.Contents == null)
+            {
+                return;
+            }
+
+            var existingProduct = Cart?.Contents?
+                .FirstOrDefault(existingProducts => existingProducts.Id == newProduct.Id);
+
+            var inventoryProduct = InventoryServiceProxy.Current.Products.FirstOrDefault(invProd => invProd.Id == newProduct.Id);
+            if (inventoryProduct == null)
+            {
+                return;
+            }
+
+            inventoryProduct.Quantity += newProduct.Quantity;
+
+                Cart?.Contents?.Remove(newProduct);
+                existingProduct.Quantity -= newProduct.Quantity;
+
+        }
+
+        //////
+        public decimal GetTotalPrice()
+        {
+            return Cart?.Contents?.Sum(product => product.Price * product.Quantity) ?? 0m;
+        }
+
+        //////
 
     }
 }

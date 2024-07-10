@@ -42,12 +42,7 @@ namespace eCommerce.MAUI.ViewModels
 
         public void EditProduct()
         {
-            if(SelectedProduct?.Model == null)
-            {
-                return;
-            }
-            InventoryServiceProxy.Current.AddOrUpdate(SelectedProduct.Model);
-            Refresh();
+            Shell.Current.GoToAsync($"//Product?productId={SelectedProduct?.Model?.Id ?? 0}");
         }
         public void DeleteProduct()
         {
