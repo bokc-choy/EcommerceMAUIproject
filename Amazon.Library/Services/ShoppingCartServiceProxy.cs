@@ -1,4 +1,5 @@
 ﻿using Amazon.Library.Models;
+using eCommerce.Library.DTO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,14 +15,24 @@ namespace Amazon.Library.Services
         private static object instanceLock = new object();
 
         private List<ShoppingCart> carts;
-        public ReadOnlyCollection<ShoppingCart> Carts
+        public List<ShoppingCart> Carts
         {
             get
             {
-                return carts.AsReadOnly();
+                return carts;
             }
         }
+        public ShoppingCart AddCart(ShoppingCart cart)
+        {
+            if (cart.Id == 0)
+            {
+                cart.Id = carts.Select(c => c.Id).Max() + 1;
+            }
 
+            carts.Add(cart);
+
+            return cart;
+        }
 
         public ShoppingCart Cart
         {
@@ -38,8 +49,8 @@ namespace Amazon.Library.Services
         }
 
 
-        private ShoppingCartServiceProxy() { 
-            carts = new List<ShoppingCart>();
+        private ShoppingCartServiceProxy() {
+            carts = new List<ShoppingCart>() { new ShoppingCart { Id = 1, Name = "My Cart" } };
         }
 
         public static ShoppingCartServiceProxy Current
@@ -57,14 +68,15 @@ namespace Amazon.Library.Services
             }
         }
 
-        public void AddToCart(Product newProduct)
+        public void AddToCart(ProductDTO newProduct, int id)
         {
-            if(Cart == null || Cart.Contents == null)
+            var cartToUse = Carts.FirstOrDefault(c => c.Id == id);
+            if (cartToUse == null || cartToUse.Contents == null)
             {
                 return;
             }
 
-            var existingProduct = Cart?.Contents?
+            var existingProduct = cartToUse?.Contents?
                 .FirstOrDefault(existingProducts => existingProducts.Id == newProduct.Id);
 
             var inventoryProduct = InventoryServiceProxy.Current.Products.FirstOrDefault(invProd => invProd.Id == newProduct.Id);
@@ -83,19 +95,20 @@ namespace Amazon.Library.Services
             } else
             {
                 //add
-                Cart?.Contents?.Add(newProduct);
+                cartToUse?.Contents?.Add(newProduct);
             }
         }
 
         // Remove //
-        public void RemoveFromCart(Product newProduct)
+        public void RemoveFromCart(ProductDTO newProduct, int id)
         {
-            if (Cart == null || Cart.Contents == null)
+            var cartToUse = Carts.FirstOrDefault(c => c.Id == id);
+            if (cartToUse == null || cartToUse.Contents == null)
             {
                 return;
             }
 
-            var existingProduct = Cart?.Contents?
+            var existingProduct = cartToUse?.Contents?
                 .FirstOrDefault(existingProducts => existingProducts.Id == newProduct.Id);
 
             var inventoryProduct = InventoryServiceProxy.Current.Products.FirstOrDefault(invProd => invProd.Id == newProduct.Id);
@@ -106,15 +119,23 @@ namespace Amazon.Library.Services
 
             inventoryProduct.Quantity += newProduct.Quantity;
 
-                Cart?.Contents?.Remove(newProduct);
+                cartToUse?.Contents?.Remove(newProduct);
                 existingProduct.Quantity -= newProduct.Quantity;
 
         }
 
         //////
-        public decimal GetTotalPrice()
+        public decimal GetTotalPrice(int id)
         {
-            return Cart?.Contents?.Sum(product => product.Price * product.Quantity) ?? 0m;
+            var cartToUse = Carts.FirstOrDefault(c => c.Id == id);
+            if (cartToUse == null || cartToUse.Contents == null)
+            {
+                return 0m;
+            }
+            else
+            {
+                return cartToUse?.Contents?.Sum(product => product.Price * product.Quantity) ?? 0m;
+            }
         }
 
         //////

@@ -1,15 +1,13 @@
-﻿using eCommerce.Library.DTO;
+﻿using Amazon.Library.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace Amazon.Library.Models
+namespace eCommerce.Library.DTO
 {
-    public class Product
+    public class ProductDTO
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
@@ -17,13 +15,8 @@ namespace Amazon.Library.Models
         public int Id { get; set; }
 
         public int Quantity { get; set; }
-
-        public Product()
-        {
-
-        }
-
-        public Product(Product p)
+        
+        public ProductDTO(Product p)
         {
             Name = p.Name;
             Description = p.Description;
@@ -31,14 +24,16 @@ namespace Amazon.Library.Models
             Id = p.Id;
             Quantity = p.Quantity;
         }
-        
-        public Product(ProductDTO d)
+
+        public ProductDTO(ProductDTO p)
         {
-            Name = d.Name; 
-            Description = d.Description;
-            Price = d.Price;
-            Id = d.Id;
-            Quantity= d.Quantity;
+            Name = p.Name;
+            Description = p.Description;
+            Price = p.Price;
+            Id = p.Id;
+            Quantity = p.Quantity;
         }
+
+        public ProductDTO() { }
     }
 }

@@ -56,8 +56,9 @@ namespace eCommerce.MAUI.ViewModels
         }
         //
 
-        public void Refresh()
+        public async void Refresh()
         {
+            await InventoryServiceProxy.Current.Get();
             NotifyPropertyChanged(nameof(Products));
         }
 

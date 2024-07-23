@@ -18,6 +18,7 @@ public partial class InventoryView : ContentPage
     private void AddClicked(object sender, EventArgs e)
     {
         Shell.Current.GoToAsync("//Product");
+
     }
 
     // NEW STUFF

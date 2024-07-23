@@ -1,5 +1,6 @@
 ﻿using Amazon.Library.Models;
 using Amazon.Library.Services;
+using eCommerce.Library.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace eCommerce.MAUI.ViewModels
             }
             return $"{Model.Id} - {Model.Name} - {Model.Price:C}";
         }
-        public Product? Model { get; set; }
+        public ProductDTO? Model { get; set; }
 
         public string DisplayPrice
         {
@@ -50,16 +51,16 @@ namespace eCommerce.MAUI.ViewModels
         {
             if(productId == 0)
             {
-                Model = new Product();
+                Model = new ProductDTO();
             }
             else
             {
                 Model = InventoryServiceProxy.Current
-                    .Products.FirstOrDefault(p => p.Id == productId) ?? new Product();
+                    .Products.FirstOrDefault(p => p.Id == productId) ?? new ProductDTO();
             }
         }
 
-        public ProductViewModel(Product? model)
+        public ProductViewModel(ProductDTO? model)
         {
             if(model != null)
             {
@@ -67,15 +68,15 @@ namespace eCommerce.MAUI.ViewModels
             }
             else
             {
-                Model = new Product();
+                Model = new ProductDTO();
             }
         }
 
-        public void Add()
+        public async void Add()
         {
             if (Model != null)
             {
-                InventoryServiceProxy.Current.AddOrUpdate(Model);
+                Model = await InventoryServiceProxy.Current.AddOrUpdate(Model);
             }
         }
     }
