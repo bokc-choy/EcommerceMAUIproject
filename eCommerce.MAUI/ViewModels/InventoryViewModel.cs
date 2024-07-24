@@ -44,14 +44,9 @@ namespace eCommerce.MAUI.ViewModels
         {
             Shell.Current.GoToAsync($"//Product?productId={SelectedProduct?.Model?.Id ?? 0}");
         }
-        public void DeleteProduct()
+        public async void DeleteProduct()
         {
-            if(SelectedProduct?.Model == null)
-            {
-                return;
-            }
-
-            InventoryServiceProxy.Current.Delete(SelectedProduct.Model.Id);
+            await InventoryServiceProxy.Current.Delete(SelectedProduct?.Model?.Id ?? 0);
             Refresh();
         }
         //

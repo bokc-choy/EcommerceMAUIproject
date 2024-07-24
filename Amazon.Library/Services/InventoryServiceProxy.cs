@@ -34,19 +34,32 @@ namespace Amazon.Library.Services
         }
         
         // NEW STUFF
-        public void Delete(int id)
+        public async Task<ProductDTO> Delete(int id)
         {
-            if(products == null)
-            {
-                return;
-            }
-            var productToDelete = products.FirstOrDefault(p => p.Id == id);
+            //var itemToDelete = Products.FirstOrDefault(p => p.Id == id);
+            //if(itemToDelete == null)
+            //{
+            //    return null;
+            //}
+            //products.Remove(itemToDelete);
 
-            if(productToDelete != null)
-            {
-                products.Remove(productToDelete);
-            }
+            var response = await new WebRequestHandler().Delete($"/{id}");
+            var itemToDelete = JsonConvert.DeserializeObject<ProductDTO>(response);
+            return itemToDelete;
         }
+        //public void Delete(int id)
+        //{
+        //    if(products == null)
+        //    {
+        //        return;
+        //    }
+        //    var productToDelete = products.FirstOrDefault(p => p.Id == id);
+
+        //    if(productToDelete != null)
+        //    {
+        //        products.Remove(productToDelete);
+        //    }
+        //}
 
         private InventoryServiceProxy()
         {
