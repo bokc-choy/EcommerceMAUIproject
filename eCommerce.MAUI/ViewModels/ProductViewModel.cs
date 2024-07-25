@@ -13,7 +13,7 @@ namespace eCommerce.MAUI.ViewModels
     {
         public override string ToString()
         {
-            if(Model == null)
+            if (Model == null)
             {
                 return string.Empty;
             }
@@ -38,9 +38,11 @@ namespace eCommerce.MAUI.ViewModels
                 {
                     return;
                 }
-                if(decimal.TryParse(value, out var price)) {
+                if (decimal.TryParse(value, out var price))
+                {
                     Model.Price = price;
-                }else
+                }
+                else
                 {
 
                 }
@@ -49,7 +51,7 @@ namespace eCommerce.MAUI.ViewModels
 
         public ProductViewModel(int productId = 0)
         {
-            if(productId == 0)
+            if (productId == 0)
             {
                 Model = new ProductDTO();
             }
@@ -62,7 +64,7 @@ namespace eCommerce.MAUI.ViewModels
 
         public ProductViewModel(ProductDTO? model)
         {
-            if(model != null)
+            if (model != null)
             {
                 Model = model;
             }

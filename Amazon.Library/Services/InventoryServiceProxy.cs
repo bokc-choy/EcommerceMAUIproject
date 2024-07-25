@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Amazon.Library.Utilities;
 using eCommerce.Library.DTO;
+using System.Formats.Asn1;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace Amazon.Library.Services
 {
@@ -91,5 +95,26 @@ namespace Amazon.Library.Services
                 return instance;
             }
         }
+
+        //
+        public async Task MassImportFromCsv(string Path)
+        {
+            var newProducts = ReadProductsFromCsv(Path);
+
+            foreach (var product in newProducts)
+            {
+                await AddOrUpdate(product);
+            }
+        }
+
+        private List<ProductDTO> ReadProductsFromCsv(string Path)
+        {
+            using (var reader = new StreamReader(Path))
+            using (var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)))
+            {
+                return csv.GetRecords<ProductDTO>().ToList();
+            }
+        }
+        //
     }
 }

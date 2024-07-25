@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="eCommerce.MAUI.Views.Receipt"
+             Title="{Binding SelectedCart}">
+    <VerticalStackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="10*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <VerticalStackLayout>
+                    <ListView
+                    ItemsSource="{Binding ProductsInCart}"
+                    >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Column="0" Text="{Binding DisplayPrice}"/>
+                                        <Label Grid.Column="1" Text="{Binding Model.Name}"/>
+                                        <Label Grid.Column="2" Text="{Binding Model.Quantity}"/>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Text="Total Price = "/>
+                    <Label Grid.Column="1" Text="{Binding TotalPrice}"/>
+                </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Row="2"
+                Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Button
+                    Grid.Row="0"
+                    Text="Done"
+                    Clicked="DoneClicked"
+                    />
+            </Grid>
+
+        </Grid>
+    </VerticalStackLayout>
+
+
+</ContentPage>

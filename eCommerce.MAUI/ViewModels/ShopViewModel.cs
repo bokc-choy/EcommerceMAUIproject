@@ -188,10 +188,6 @@ namespace eCommerce.MAUI.ViewModels
         {
             TotalPrice = ShoppingCartServiceProxy.Current.GetTotalPrice(SelectedCart?.Id ?? 0);
         }
-        //////
-
-
-        //////
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -199,5 +195,23 @@ namespace eCommerce.MAUI.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        ////// CHECKOUT STUFF
+        public void Checkout()
+        {
+            if (SelectedCart == null)
+            {
+                return;
+            }
+            ShoppingCartServiceProxy.Current.Checkout(SelectedCart.Id);
+
+            CalculatePrice();
+
+            NotifyPropertyChanged(nameof(ProductsInCart));
+            NotifyPropertyChanged(nameof(Products));
+            NotifyPropertyChanged(nameof(TotalPrice));
+        }
+
+        //////
     }
 }

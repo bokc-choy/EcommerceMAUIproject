@@ -28,5 +28,9 @@
         Title="New Cart"
         ContentTemplate="{DataTemplate views:CartView}"
         Route="Cart" />
+    <ShellContent
+        Title="Receipt"
+        ContentTemplate="{DataTemplate views:Receipt}"
+        Route="Receipt" />
 
 </Shell>

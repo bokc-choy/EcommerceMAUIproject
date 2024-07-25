@@ -39,4 +39,10 @@ public partial class ShopView : ContentPage
     {
         Shell.Current.GoToAsync("//Cart");
     }
+
+    private void CheckoutClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//Receipt");
+        (BindingContext as ShopViewModel).Checkout();
+    }
 }

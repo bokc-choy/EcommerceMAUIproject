@@ -1,5 +1,7 @@
 ﻿using Amazon.Library.Models;
+using Amazon.Library.Utilities;
 using eCommerce.Library.DTO;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -116,9 +118,7 @@ namespace Amazon.Library.Services
             {
                 return;
             }
-
-            inventoryProduct.Quantity += newProduct.Quantity;
-
+                inventoryProduct.Quantity += newProduct.Quantity;
                 cartToUse?.Contents?.Remove(newProduct);
                 existingProduct.Quantity -= newProduct.Quantity;
 
@@ -139,6 +139,26 @@ namespace Amazon.Library.Services
         }
 
         //////
+        ///
+        public void Checkout(int id)
+        {
+            var cartToUse = Carts.FirstOrDefault(c => c.Id == id);
+            if (cartToUse == null || cartToUse.Contents == null)
+            {
+                return;
+            }
+            foreach (var product in cartToUse.Contents.ToList())
+            {
+                var inventoryProduct = InventoryServiceProxy.Current.Products.FirstOrDefault(p => p.Id == product.Id);
+
+                if (inventoryProduct != null)
+                {
+                    inventoryProduct.Quantity -= product.Quantity;
+                }
+            }
+            cartToUse.Contents.Clear();
+
+        }
 
     }
 }

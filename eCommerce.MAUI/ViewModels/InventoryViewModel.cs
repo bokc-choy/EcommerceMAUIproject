@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace eCommerce.MAUI.ViewModels
 {
@@ -63,5 +64,40 @@ namespace eCommerce.MAUI.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        // NEW STUFF AGAIN //
+        private string status;
+        public string Status
+        {
+            get => status;
+            set
+            {
+                status = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ICommand ImportCsvCommand { get; }
+
+        public async void Import()
+        {
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Please select a CSV file",
+                });
+
+                if (result != null)
+                {
+                    ImportCsv(result.FullPath);
+                    Refresh();
+                }
+        }
+
+        private async void ImportCsv(string csvFilePath)
+        {
+            await InventoryServiceProxy.Current.MassImportFromCsv(csvFilePath);
+            Refresh();
+        }
+        //
     }
 }

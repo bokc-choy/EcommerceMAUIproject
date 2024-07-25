@@ -121,6 +121,7 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 
                 <Button
@@ -137,6 +138,12 @@
 
                 <Button
                     Grid.Row="2"
+                    Text="Check Out"
+                    Clicked="CheckoutClicked"
+                    />
+
+                <Button
+                    Grid.Row="3"
                     Text="Cancel"
                     Clicked="CancelClicked"
                     />
